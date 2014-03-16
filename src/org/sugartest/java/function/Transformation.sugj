@@ -1,0 +1,18 @@
+package org.sugartest.java.function;
+
+import org.sugartest.java.function.Syntax;
+
+import org.sugarj.languages.Java;
+
+public sugar Transformation {
+	desugarings
+		desugar-function-equal
+	
+	rules
+		desugar-function-equal:	
+			FunctionEqual(MethodDecHead(mods, tparams, Void, ids, params, exps), expr) -> 
+			MethodDec(MethodDecHead(mods, tparams, Void, ids, params, exps), Block([ExprStm(expr)]))
+		desugar-function-equal:
+			FunctionEqual(head, expr) -> 
+			MethodDec(head, Block([Return(Some(expr))]))
+}

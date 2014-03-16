@@ -1,0 +1,10 @@
+package org.sugartest.java.function;
+
+import org.sugarj.languages.Java;
+
+public sugar Syntax {
+
+	context-free syntax
+		JavaMethodDecHead "=" JavaExpr ";" -> JavaMethodDec {cons("FunctionEqual")}
+
+}

@@ -1,0 +1,36 @@
+package org.sugartest.java.function;
+
+import org.sugartest.java.function.Syntax;
+import org.sugartest.java.function.Transformation;
+//import org.junit.Assert;
+import org.sugarj.test.java.JUnitWrapper;
+
+public class TestFunctions {
+
+	private int val = 0;
+	
+	public int setVal(int newVal) {
+		val = newVal;
+		return val;
+	}
+	
+	public void zeroVal() = setVal(0);
+	
+	public int getVal() = val;
+	
+	public int incVal(int delta) = setVal(getVal() + delta);
+	
+	public static void test() {
+		Test t = new Test();
+		t.zeroVal();
+		JUnitWrapper.assertEquals(0, t.getVal());
+		JUnitWrapper.assertEquals(1, t.incVal(1));
+		JUnitWrapper.assertEquals(1, t.getVal());
+		JUnitWrapper.assertEquals(5, t.setVal(5));
+		JUnitWrapper.assertEquals(8, t.incVal(3));
+		t.zeroVal();
+		JUnitWrapper.assertEquals(0, t.getVal());
+	 }
+
+
+}

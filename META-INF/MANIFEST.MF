@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.sugarj.test-java
+Bundle-SymbolicName: org.sugarj.test-java
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.sugarj.compiler,
+ org.sugarj.language.java,
+ org.junit,
+ org.eclipse.core.resources
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
