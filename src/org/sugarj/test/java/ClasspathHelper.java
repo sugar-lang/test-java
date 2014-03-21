@@ -17,38 +17,44 @@ import java.util.zip.ZipInputStream;
 
 public class ClasspathHelper {
 
+	private static final List<String> problematicJars = Arrays.asList(
+			"org.sugarj.stdlib", "org.strategoxt.imp.nativebundle");
+
 	public static String fixClasspathForNativebundle() throws IOException {
 		String classpath = System.getProperty("java.class.path");
-		System.out.println(classpath);
 		List<String> classpathEntries = new ArrayList<>(Arrays.asList(classpath
 				.split(File.pathSeparator)));
 
-		// Get the classpath for the nativebundle
-		String nativebundlePath = getNativebundleClassPathEntry(classpathEntries);
-		System.out.println("Maven dependency for nativebundle: "
-				+ nativebundlePath);
-		if (isJarFile(nativebundlePath)) {
-			System.out
-					.println("Nativebundle is packaged as JAR, need to extract it");
-			// Nativebundle is not allowed to be a jar
-			classpathEntries.remove(nativebundlePath);
-			// Extract the jar file to a folder and use this as path
-			nativebundlePath = extractJarFile(nativebundlePath);
-			System.out.println("New folder of nativebundle: "
-					+ nativebundlePath);
-			classpathEntries.add(nativebundlePath);
+		for (String problemJar : problematicJars) {
+			// Get the classpath for the bundle
+			String problemJarPath = getClassPathEntry(classpathEntries,
+					problemJar);
+			System.out.println("Maven dependency for " + problemJar + ": "
+					+ problemJarPath);
+			if (problemJarPath != null && isJarFile(problemJarPath)) {
+				System.out.println("is packaged as JAR, need to extract it");
+				// Bundle is not allowed to be a jar
+				classpathEntries.remove(problemJarPath);
+				// Extract the jar file to a folder and use this as path
+				problemJarPath = extractJarFile(problemJarPath);
+				System.out.println("New folder of nativebundle: "
+						+ problemJarPath);
+				classpathEntries.add(problemJarPath);
+			}
+
 		}
 		classpath = "";
-		while(classpathEntries.size() > 1) {
+		while (classpathEntries.size() > 1) {
 			classpath += classpathEntries.remove(0) + File.pathSeparator;
 		}
 		classpath += classpathEntries.remove(0);
 		return classpath;
 	}
 
-	private static String getNativebundleClassPathEntry(Iterable<String> entries) {
+	private static String getClassPathEntry(Iterable<String> entries,
+			String identifier) {
 		for (String entry : entries) {
-			if (entry.contains("org.strategoxt.imp.nativebundle")) {
+			if (entry.contains(identifier)) {
 				return entry;
 			}
 		}
@@ -61,7 +67,7 @@ public class ClasspathHelper {
 
 	public static String extractJarFile(String jarFile) throws IOException {
 		// System.out.println(org.strategoxt.imp.nativebundle.Activator.getInstance().getContext().getBundle().getResource("native/"));
-		Path nativeDirPath = Paths.get("./tmp/nativebundle");
+		Path nativeDirPath = Paths.get("./tmp/", Paths.get(jarFile).getFileName().toString());
 		emptyDirectory(nativeDirPath);
 		unzip(jarFile, nativeDirPath.toString());
 		return nativeDirPath.toAbsolutePath().toString();
