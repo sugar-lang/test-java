@@ -30,8 +30,8 @@ public class CompilerWrapper {
 		if (!srcPath.exists()) {
 			throw new IllegalArgumentException("Src Path does not exist");
 		}
-		this.srcPath = srcPath.toPath().normalize().toAbsolutePath();
-		this.binPath = binPath.toPath().normalize().toAbsolutePath();
+		this.srcPath = srcPath.toPath().toAbsolutePath().normalize();
+		this.binPath = binPath.toPath().toAbsolutePath().normalize();
 		try {
 			ClasspathHelper.emptyDirectory(cacheFolder);
 		} catch (IOException e) {
