@@ -1,25 +1,42 @@
 package org.sugarj.test.java;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
-import org.sugarj.driver.cli.Main;
-
 public class CompilerWrapper {
 
-	private File srcPath;
-	private File binPath;
+	private Path srcPath;
+	private Path binPath;
+	
+	private static  final  Path cacheFolder = Paths.get("./.sugarcache");
+
+	private static final String compilerClassPath;
+
+	static {
+		try {
+			compilerClassPath = ClasspathHelper.fixClasspathForNativebundle();
+		} catch (IOException e) {
+			throw new RuntimeException(
+					"Unable to create classpath for SugarJ compiler", e);
+		}
+	}
 
 	public CompilerWrapper(File srcPath, File binPath) {
 		super();
 		if (!srcPath.exists()) {
 			throw new IllegalArgumentException("Src Path does not exist");
 		}
-		this.srcPath = srcPath.getAbsoluteFile();
-
-		this.binPath = binPath;
+		this.srcPath = srcPath.toPath().normalize().toAbsolutePath();
+		this.binPath = binPath.toPath().normalize().toAbsolutePath();
+		try {
+			ClasspathHelper.emptyDirectory(cacheFolder);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to empty cache", e);
+		}
 	}
 
 	public CompilerWrapper(File srcPath) {
@@ -32,18 +49,22 @@ public class CompilerWrapper {
 
 	public boolean callCompiler(File packageFolder, List<String> inputFiles) {
 		List<String> args = new ArrayList<>();
+		args.add("java");
+		args.add("-cp");
+		args.add(compilerClassPath);
+		args.add("org.sugarj.driver.cli.Main");
 		args.add("-v");
 		args.add("DEBUG");
 		args.add("-l");
 		args.add("java");
 		args.add("--gen-files");
 		args.add("--cache");
-		args.add(".sugarcache/");
-		args.add("--dontTerminateJVM");
+		args.add(cacheFolder.toString());
+		//args.add("--dontTerminateJVM");
 		args.add("--sourcepath");
-		args.add(this.srcPath.getAbsolutePath());
+		args.add(this.srcPath.toString());
 		args.add("-d");
-		args.add(this.binPath.getAbsolutePath());
+		args.add(this.binPath.toString());
 		for (String source : inputFiles) {
 			if (packageFolder != null) {
 				args.add(packageFolder.getPath() + "/" + source);
@@ -51,9 +72,25 @@ public class CompilerWrapper {
 				args.add(source);
 			}
 		}
+		/*
+		 * try {
+		 * 
+		 * Main.main(args.toArray(new String[args.size()])); } catch (Throwable
+		 * e) { e.printStackTrace(); return false; }
+		 */
 		try {
-			Main.main(args.toArray(new String[args.size()]));
-		} catch (Throwable e) {
+			System.out.println("Call SugarJ using");
+			for (String s : args) {
+				System.out.print(s);
+				System.out.print(" ");
+			}
+			System.out.println();
+			ProcessBuilder builder = new ProcessBuilder(args);
+			builder.inheritIO();
+			Process compilerProcess = builder.start();
+			int exitCode = compilerProcess.waitFor();
+			System.out.println("SugarJ exited with code " + exitCode);
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -64,9 +101,9 @@ public class CompilerWrapper {
 		// Collect sugj files
 		File folder;
 		if (packageFolder != null) {
-			folder = new File(this.srcPath, packageFolder.getPath());
+			folder = new File(this.srcPath.toFile(), packageFolder.getPath());
 		} else {
-			folder = this.srcPath;
+			folder = this.srcPath.toFile();
 		}
 		List<String> sugjFiles = new ArrayList<>();
 		collectFiles(folder, "", sugjFiles);

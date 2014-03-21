@@ -21,7 +21,7 @@ public class TestFunctions {
 	public int incVal(int delta) = setVal(getVal() + delta);
 	
 	public static void test() {
-		Test t = new Test();
+		TestFunctions t = new TestFunctions();
 		t.zeroVal();
 		JUnitWrapper.assertEquals(0, t.getVal());
 		JUnitWrapper.assertEquals(1, t.incVal(1));
