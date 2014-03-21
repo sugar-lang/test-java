@@ -18,7 +18,7 @@ import java.util.zip.ZipInputStream;
 public class ClasspathHelper {
 
 	private static final List<String> problematicJars = Arrays.asList(
-			"org.sugarj.stdlib", "org.strategoxt.imp.nativebundle");
+			"org.sugarj.stdlib", "org.strategoxt.imp.nativebundle", "org.sugarj.language.java");
 
 	public static String fixClasspathForNativebundle() throws IOException {
 		String classpath = System.getProperty("java.class.path");
