@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CompilerWrapper {
@@ -32,11 +33,11 @@ public class CompilerWrapper {
 		}
 		this.srcPath = srcPath.toPath().toAbsolutePath().normalize();
 		this.binPath = binPath.toPath().toAbsolutePath().normalize();
-		try {
+		/*try {
 			ClasspathHelper.emptyDirectory(cacheFolder);
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to empty cache", e);
-		}
+		}*/
 	}
 
 	public CompilerWrapper(File srcPath) {
@@ -97,7 +98,7 @@ public class CompilerWrapper {
 		return true;
 	}
 
-	public boolean callCompiler(File packageFolder) {
+	public boolean callCompiler(File packageFolder, String ... files) {
 		// Collect sugj files
 		File folder;
 		if (packageFolder != null) {
@@ -106,14 +107,20 @@ public class CompilerWrapper {
 			folder = this.srcPath.toFile();
 		}
 		List<String> sugjFiles = new ArrayList<>();
+		if (files.length == 0) {
 		collectFiles(folder, "", sugjFiles);
+		} else {
+			sugjFiles.addAll(Arrays.asList(files));
+		}
 		System.out.println(sugjFiles);
 		return this.callCompiler(packageFolder, sugjFiles);
 	}
 
 	private static void collectFiles(File folder, String relativeFolder,
 			List<String> collectedFiles) {
-		for (File f : folder.listFiles()) {
+		File[] files = folder.listFiles();
+		Arrays.sort(files);
+		for (File f : files) {
 			if (f.isDirectory()) {
 				collectFiles(f, relativeFolder + f.getName() + "/",
 						collectedFiles);
