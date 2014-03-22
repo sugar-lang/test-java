@@ -21,7 +21,8 @@ public class JavaCaseStudiesTest {
 		CompilerWrapper wrapper = new CompilerWrapper(new File(
 				"../case-studies/pairs/src/"));
 		assertTrue(wrapper.callCompiler(null, "pair/Pair.sugj", "pair/Test.sugj"));
-		assertTrue(wrapper.callCompiler(null, "tuples/Test.sugj" , "pair/singleton/Pair.sugj", "pair/singleton/Test.sugj", "pair/concrete/Test.sugj"));
+		assertTrue(wrapper.callCompiler(null, "pair/singleton/Pair.sugj"));
+		assertTrue(wrapper.callCompiler(null, "tuples/Test.sugj" ,  "pair/singleton/Test.sugj", "pair/concrete/Test.sugj"));
 		
 		assertTrue(wrapper.callCompiledStaticMethod("pair.Test", "main",
 				new Class[] { String[].class }, new Object[] { null }));
