@@ -48,7 +48,7 @@ public class CompilerWrapper {
 		this(new File("src/"));
 	}
 
-	public boolean callCompiler(File packageFolder, List<String> inputFiles) {
+	public void callCompiler(File packageFolder, List<String> inputFiles) {
 		List<String> args = new ArrayList<>();
 		args.add("java");
 		args.add("-cp");
@@ -93,12 +93,11 @@ public class CompilerWrapper {
 			System.out.println("SugarJ exited with code " + exitCode);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException("Calling SugarJ Compiler failed!", e);
 		}
-		return true;
 	}
 
-	public boolean callCompiler(File packageFolder, String ... files) {
+	public void callCompiler(File packageFolder, String ... files) {
 		// Collect sugj files
 		File folder;
 		if (packageFolder != null) {
@@ -113,7 +112,11 @@ public class CompilerWrapper {
 			sugjFiles.addAll(Arrays.asList(files));
 		}
 		System.out.println(sugjFiles);
-		return this.callCompiler(packageFolder, sugjFiles);
+		this.callCompiler(packageFolder, sugjFiles);
+	}
+	
+	public void callCompiler(String ... files) {
+		this.callCompiler(null, files);
 	}
 
 	private static void collectFiles(File folder, String relativeFolder,
@@ -130,21 +133,24 @@ public class CompilerWrapper {
 		}
 	}
 
-	public boolean callCompiledStaticVoidMethod(String className,
+	public void callCompiledStaticVoidMethod(String className,
 			String methodName) {
-		return callCompiledStaticMethod(className, methodName, new Class[0],
+		this.callCompiledStaticMethod(className, methodName, new Class[0],
 				(Object[]) null);
 	}
+	
+	public void callMainMethod(String className) {
+		this.callCompiledStaticMethod(className,"main", new Class[]{String[].class}, new Object[]{null});
+	}
 
-	public boolean callCompiledStaticMethod(String className,
+	public void callCompiledStaticMethod(String className,
 			String methodName, Class<?>[] params, Object[] args) {
 		try {
 			Class<?> c = Class.forName(className);
 			c.getMethod(methodName, params).invoke(null, args);
-			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			throw new RuntimeException("Calling method of SugarJ compiled class failed!", e);
 		}
 	}
 
