@@ -56,6 +56,8 @@ public class CompilerWrapper {
 		args.add("org.sugarj.driver.cli.Main");
 		args.add("-v");
 		args.add("DEBUG");
+		args.add("-v");
+		args.add("DETAIL");
 		args.add("-l");
 		args.add("java");
 		args.add("--gen-files");
@@ -91,6 +93,9 @@ public class CompilerWrapper {
 			Process compilerProcess = builder.start();
 			int exitCode = compilerProcess.waitFor();
 			System.out.println("SugarJ exited with code " + exitCode);
+			if (exitCode != 0) {
+				throw new RuntimeException("SugarJ not successfully terminated with code "+ exitCode);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Calling SugarJ Compiler failed!", e);
