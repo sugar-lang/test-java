@@ -148,7 +148,7 @@ public class CompilerWrapper {
 			@Override
 			public FileVisitResult visitFile(Path file,
 					BasicFileAttributes attrs) throws IOException {
-				if (file.getFileName().endsWith(".sugj")) {
+				if (file.getFileName().toString().endsWith(".sugj")) {
 					collectedFiles.add(folder.relativize(file).toString());
 				}
 				return FileVisitResult.CONTINUE;

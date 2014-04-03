@@ -109,6 +109,7 @@ public class CaseStudyCompiler {
 				}
 			} catch (ClassNotFoundException e) {
 				System.out.println("    Loading class failed.");
+				e.printStackTrace();
 				allSuccess = false;
 			}
 		}
