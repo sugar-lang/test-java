@@ -16,7 +16,7 @@ public class CompilerWrapper {
 	private Path srcPath;
 	private Path binPath;
 
-	private static final Path cacheFolder = Paths.get("./.sugarcache");
+	private static final Path cacheFolder = Paths.get("./sugarcache");
 
 	private static final String compilerClassPath;
 
@@ -34,7 +34,7 @@ public class CompilerWrapper {
 	public CompilerWrapper(Path srcPath, Path binPath) {
 		super();
 		if (!Files.exists(srcPath)) {
-			throw new IllegalArgumentException("Src Path does not exist");
+			throw new IllegalArgumentException("Src Path does not exist: " + srcPath.toString());
 		}
 		this.srcPath = srcPath.toAbsolutePath().normalize();
 		this.binPath = binPath.toAbsolutePath().normalize();
@@ -100,7 +100,12 @@ public class CompilerWrapper {
 			if (this.useDifferentProcess) {
 				ProcessBuilder builder = new ProcessBuilder(args);
 				builder.inheritIO();
-				Process compilerProcess = builder.start();
+				final Process compilerProcess = builder.start();
+				Runtime.getRuntime().addShutdownHook(new Thread() {
+					public void run() {
+						compilerProcess.destroy();
+					}
+				});
 				int exitCode = compilerProcess.waitFor();
 				System.out.println("SugarJ exited with code " + exitCode);
 				if (exitCode != 0) {

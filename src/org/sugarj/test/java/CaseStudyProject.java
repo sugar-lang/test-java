@@ -21,9 +21,9 @@ public class CaseStudyProject {
 	public CaseStudyProject(String name) {
 		super();
 		this.name = name;
-		this.path = Paths.get("../case-studies", name).toAbsolutePath().normalize();
+		this.path = Paths.get("../../case-studies", name).toAbsolutePath().normalize();
 		this.srcPath = this.path.resolve("src");
-		this.binPath = this.path.resolve("bin");
+		this.binPath = this.path.resolve("target/test-classes");
 	}
 
 	public String getName() {

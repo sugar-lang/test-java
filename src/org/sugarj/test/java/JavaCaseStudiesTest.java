@@ -1,19 +1,10 @@
 package org.sugarj.test.java;
 
-import static org.junit.Assert.assertTrue;
-import static org.sugarj.test.java.CaseStudyCompiler.compileAndTestCaseStudy;
-
-import java.io.File;
 import java.nio.file.Paths;
 
 import org.junit.Test;
 
 public class JavaCaseStudiesTest {
-
-	@Test
-	public void testPairs() {
-		assertTrue(compileAndTestCaseStudy(new CaseStudyProject("pairs")));
-	}
 
 	@Test
 	public void testClosures() {

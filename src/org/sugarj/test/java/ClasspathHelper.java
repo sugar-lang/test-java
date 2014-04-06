@@ -22,6 +22,7 @@ public class ClasspathHelper {
 
 	public static String fixClasspathForNativebundle() throws IOException {
 		String classpath = System.getProperty("java.class.path");
+		System.out.println(classpath);
 		List<String> classpathEntries = new ArrayList<>(Arrays.asList(classpath
 				.split(File.pathSeparator)));
 
@@ -37,7 +38,7 @@ public class ClasspathHelper {
 				classpathEntries.remove(problemJarPath);
 				// Extract the jar file to a folder and use this as path
 				problemJarPath = extractJarFile(problemJarPath);
-				System.out.println("New folder of nativebundle: "
+				System.out.println("New folder of JAR: "
 						+ problemJarPath);
 				classpathEntries.add(problemJarPath);
 			}
