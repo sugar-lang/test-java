@@ -7,21 +7,6 @@ import org.junit.Test;
 public class JavaCaseStudiesTest {
 
 	@Test
-	public void testClosures() {
-		CompilerWrapper wrapper = new CompilerWrapper(Paths.get(
-				"../case-studies/closures/src/"));
-		wrapper.callCompiler("javaclosure/Closure.sugj",
-				"javaclosure/Syntax.sugj", "javaclosure/ToRefType.sugj");
-		wrapper.callCompiler("javaclosure/Analysis.sugj",
-				"javaclosure/Transformation.sugj");
-		wrapper.callCompiler("javaclosure/Test.sugj");
-		wrapper.callMainMethod("javaclosure.Test");
-		wrapper.callCompiler("javaclosure/alternative/Arrows.sugj");
-		wrapper.callCompiler("javaclosure/alternative/ArrowTest.sugj");
-		wrapper.callMainMethod("javaclosure.alternative.ArrowTest");
-	}
-
-	@Test
 	public void testQuestionnaireLanguage() {
 		CompilerWrapper wrapper = new CompilerWrapper(Paths.get(
 				"../case-studies/questionnaire-language/src/"));

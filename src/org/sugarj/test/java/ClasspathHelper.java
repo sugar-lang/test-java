@@ -22,7 +22,6 @@ public class ClasspathHelper {
 
 	public static String fixClasspathForNativebundle() throws IOException {
 		String classpath = System.getProperty("java.class.path");
-		System.out.println(classpath);
 		List<String> classpathEntries = new ArrayList<>(Arrays.asList(classpath
 				.split(File.pathSeparator)));
 
