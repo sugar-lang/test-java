@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-
 public class CaseStudyCompiler {
-
 
 	public static boolean compileAndTestCaseStudy(final CaseStudyProject project) {
 		System.out.println(" === Compiling case study \"" + project.getName()
@@ -15,8 +13,8 @@ public class CaseStudyCompiler {
 		System.out.println("Bin: " + project.getBinPath());
 		// Initialize Compiler and get files to compile
 		CompilerWrapper wrapper = new CompilerWrapper(project.getSrcPath(),
-				project.getBinPath());
-		
+				project.getBinPath(), project.getName());
+
 		List<Path> testFiles;
 		try {
 			testFiles = project.getTestSugJFiles();
@@ -44,9 +42,10 @@ public class CaseStudyCompiler {
 			return false;
 		}
 		System.out.println("Compiling successful.");
-	
+
 		return true;
 	}
+
 	public static void main(String[] args) {
 		if (!compileAndTestCaseStudy(new CaseStudyProject(args[0]))) {
 			System.exit(1);

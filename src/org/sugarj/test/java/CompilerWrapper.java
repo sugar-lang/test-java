@@ -15,6 +15,7 @@ public class CompilerWrapper {
 
 	private Path srcPath;
 	private Path binPath;
+	private String id;
 
 	private static final Path cacheFolder;
 
@@ -41,13 +42,14 @@ public class CompilerWrapper {
 		}
 	}
 
-	public CompilerWrapper(Path srcPath, Path binPath) {
+	public CompilerWrapper(Path srcPath, Path binPath, String id) {
 		super();
 		if (!Files.exists(srcPath)) {
 			throw new IllegalArgumentException("Src Path does not exist: " + srcPath.toString());
 		}
 		this.srcPath = srcPath.toAbsolutePath().normalize();
 		this.binPath = binPath.toAbsolutePath().normalize();
+		this.id = id;
 		/*
 		 * try { ClasspathHelper.emptyDirectory(cacheFolder); } catch
 		 * (IOException e) { throw new RuntimeException("Failed to empty cache",
@@ -55,15 +57,16 @@ public class CompilerWrapper {
 		 */
 	}
 
-	public CompilerWrapper(Path srcPath) {
-		this(srcPath, Paths.get("target/test-classes"));
+	public CompilerWrapper(Path srcPath, String id) {
+		this(srcPath, Paths.get("target/test-classes"), id);
 	}
 
-	public CompilerWrapper() {
-		this(Paths.get("src/"));
+	public CompilerWrapper(String id) {
+		this(Paths.get("src/"), id);
 	}
 
 	public void callCompiler(Path packageFolder, List<String> inputFiles) {
+		Path cacheFolder = CompilerWrapper.cacheFolder.resolve(id);
 		List<String> args = new ArrayList<>();
 		if (this.useDifferentProcess) {
 			args.add("java");

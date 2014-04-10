@@ -9,7 +9,7 @@ public class JavaCaseStudiesTest {
 	@Test
 	public void testQuestionnaireLanguage() {
 		CompilerWrapper wrapper = new CompilerWrapper(Paths.get(
-				"../case-studies/questionnaire-language/src/"));
+				"../case-studies/questionnaire-language/src/"), "quest");
 		wrapper.callCompiler("quest/lang/Syntax.sugj");
 		wrapper.callCompiler("quest/lang/NormalizeQuestionText.sugj");
 		wrapper.callCompiler("quest/lang/Editor.sugj");
@@ -27,7 +27,7 @@ public class JavaCaseStudiesTest {
 	@Test
 	public void testXML() {
 		CompilerWrapper wrapper = new CompilerWrapper(Paths.get(
-				"../case-studies/xml/src/"));
+				"../case-studies/xml/src/"), "xml");
 		wrapper.callCompiler("concretesyntax/MetaExplode.sugj");
 		wrapper.callCompiler("concretesyntax/EditorServices.sugj",
 				"concretesyntax/Java.sugj", "concretesyntax/Stratego.sugj");

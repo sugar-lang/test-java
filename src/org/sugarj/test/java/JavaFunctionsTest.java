@@ -8,7 +8,7 @@ public class JavaFunctionsTest {
 
 	@Test
 	public void testCompile() {
-		CompilerWrapper wrapper = new CompilerWrapper();
+		CompilerWrapper wrapper = new CompilerWrapper("function");
 		wrapper.callCompiler(Paths.get("org/sugartest/java/function"));
 		wrapper.callCompiledStaticVoidMethod(
 				"org.sugartest.java.function.TestFunctions", "test");
