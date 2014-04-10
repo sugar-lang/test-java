@@ -16,7 +16,7 @@ public class CompilerWrapper {
 	private Path srcPath;
 	private Path binPath;
 
-	private static final Path cacheFolder = Paths.get("./sugarcache");
+	private static final Path cacheFolder;
 
 	private static final String compilerClassPath;
 
@@ -28,6 +28,16 @@ public class CompilerWrapper {
 		} catch (IOException e) {
 			throw new RuntimeException(
 					"Unable to create classpath for SugarJ compiler", e);
+		}
+		if (BuildServerDetector.isRunningOnBuildserver()) {
+			cacheFolder = Paths.get("/var/lib/jenkins/sugar-cache", org.sugarj.stdlib.StdLib.VERSION, org.sugarj.JavaLanguage.getInstance().getVersion());
+		} else {
+			cacheFolder = Paths.get("./sugarcache");
+		}
+		try {
+			Files.createDirectories(cacheFolder);
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to create folder for cache", e);
 		}
 	}
 
@@ -84,6 +94,8 @@ public class CompilerWrapper {
 				args.add(source);
 			}
 		}
+
+		System.out.println("Using Cache In: " + cacheFolder.toString());
 		/*
 		 * try {
 		 * 
