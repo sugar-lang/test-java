@@ -11,3 +11,4 @@ Require-Bundle: org.sugarj.compiler,
  org.eclipse.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.sugarj.stdlib
