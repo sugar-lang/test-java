@@ -65,7 +65,7 @@ public class CompilerWrapper {
 		this(Paths.get("src/"), id);
 	}
 
-	public void callCompiler(Path packageFolder, List<String> inputFiles) {
+	public int callCompiler(Path packageFolder, List<String> inputFiles) {
 		Path cacheFolder = CompilerWrapper.cacheFolder.resolve(id);
 		List<String> args = new ArrayList<>();
 		if (this.useDifferentProcess) {
@@ -112,7 +112,7 @@ public class CompilerWrapper {
 				System.out.print(" ");
 			}
 			System.out.println();
-			if (this.useDifferentProcess) {
+			//if (this.useDifferentProcess) {
 				ProcessBuilder builder = new ProcessBuilder(args);
 				builder.inheritIO();
 				final Process compilerProcess = builder.start();
@@ -123,21 +123,22 @@ public class CompilerWrapper {
 				});
 				int exitCode = compilerProcess.waitFor();
 				System.out.println("SugarJ exited with code " + exitCode);
-				if (exitCode != 0) {
+				return exitCode;
+				/*if (exitCode != 0) {
 					throw new RuntimeException(
 							"SugarJ not successfully terminated with code "
 									+ exitCode);
-				}
-			} else {
+				}*/
+			/*} else {
 				org.sugarj.driver.cli.Main.main(args.toArray(new String[0]));
-			}
+			}*/
 		} catch (Throwable e) {
 			e.printStackTrace();
 			throw new RuntimeException("Calling SugarJ Compiler failed!", e);
 		}
 	}
 
-	public void callCompiler(Path packageFolder, String... files) {
+	public int callCompiler(Path packageFolder, String... files) {
 		// Collect sugj files
 		Path folder;
 		if (packageFolder != null) {
@@ -155,11 +156,11 @@ public class CompilerWrapper {
 		} else {
 			sugjFiles.addAll(Arrays.asList(files));
 		}
-		this.callCompiler(packageFolder, sugjFiles);
+		return this.callCompiler(packageFolder, sugjFiles);
 	}
 
-	public void callCompiler(String... files) {
-		this.callCompiler(null, files);
+	public int callCompiler(String... files) {
+		return this.callCompiler(null, files);
 	}
 
 	private static void collectFiles(final Path folder, String relativeFolder,

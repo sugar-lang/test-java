@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -17,6 +18,8 @@ public class CaseStudyProject {
 	private Path path;
 	private Path srcPath;
 	private Path binPath;
+	
+	private HashMap<String, Integer> expectedExitValues;
 
 	public CaseStudyProject(String name) {
 		super();
@@ -24,6 +27,11 @@ public class CaseStudyProject {
 		this.path = Paths.get("../../case-studies", name).toAbsolutePath().normalize();
 		this.srcPath = this.path.resolve("src");
 		this.binPath = this.path.resolve("target/test-classes");
+		this.expectedExitValues = new HashMap<>();
+	}
+	
+	public void setExpectedExitValue(String file, int value) {
+		this.expectedExitValues.put(file, value);
 	}
 
 	public String getName() {
@@ -64,6 +72,13 @@ public class CaseStudyProject {
 	public List<Path> getTestSugJFiles() throws IOException {
 		return this.collectFiles(Pattern
 				.compile(".*Test\\.sugj|Test.*\\.sugj"));
+	}
+	
+	public int getExpectedExitValue(String file) {
+		if (!this.expectedExitValues.containsKey(file)) {
+			return 0;
+		}
+		return this.expectedExitValues.get(file);
 	}
 
 }

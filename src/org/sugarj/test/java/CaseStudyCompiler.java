@@ -22,32 +22,40 @@ public class CaseStudyCompiler {
 			throw new RuntimeException("Files to get Test files of case study "
 					+ project.getName(), e);
 		}
+		System.out.println("Files to compile: " + testFiles.toString());
 		// Convert files to compiler arguments
-		String[] fileNames = new String[testFiles.size()];
-		String files = "";
-		int i = 0;
 		for (Path file : testFiles) {
-			fileNames[i] = project.getSrcPath().relativize(file).toString();
-			files += fileNames[i] + " ";
-			i++;
+			String fileString = project.getSrcPath().relativize(file).toString();
+			// Compile
+			System.out.println("Test classes to compile: " + fileString);
+			System.out.println("Invoking compiler ...");
+			try {
+				int exitValue = wrapper.callCompiler(fileString);
+				int expectedValue = project.getExpectedExitValue(fileString);
+				if (exitValue != expectedValue) {
+					System.out.println("Unexpected exit value " + exitValue + " instead of " + expectedValue);
+					return false;
+				}
+			} catch (Throwable e) {
+				System.out.println("Compiling failed");
+				e.printStackTrace();
+				return false;
+			}
 		}
-		// Compile
-		System.out.println("Test classes to compile: " + files);
-		System.out.println("Invoking compiler ...");
-		try {
-			wrapper.callCompiler(fileNames);
-		} catch (Throwable e) {
-			System.out.println("Compiling failed");
-			e.printStackTrace();
-			return false;
-		}
+		
 		System.out.println("Compiling successful.");
 
 		return true;
 	}
 
 	public static void main(String[] args) {
-		if (!compileAndTestCaseStudy(new CaseStudyProject(args[0]))) {
+		CaseStudyProject p = new CaseStudyProject(args[0]);
+		for (int i = 1; i < args.length; i=i+2) {
+			String fileName = args[i];
+			int exitValue = Integer.parseInt(args[i+1]);
+			p.setExpectedExitValue(fileName, exitValue);
+		}
+		if (!compileAndTestCaseStudy(p)) {
 			System.exit(1);
 		}
 	}
