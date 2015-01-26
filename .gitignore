@@ -63,3 +63,5 @@
 /bin
 /bin
 sugarcache
+.sugarcache
+tmp

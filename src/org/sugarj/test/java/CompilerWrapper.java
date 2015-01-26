@@ -98,7 +98,7 @@ public class CompilerWrapper {
 			}
 		}
 
-		System.out.println("Using Cache In: " + cacheFolder.toString());
+		//System.out.println("Using Cache In: " + cacheFolder.toString());
 		/*
 		 * try {
 		 * 
@@ -106,11 +106,11 @@ public class CompilerWrapper {
 		 * e) { e.printStackTrace(); return false; }
 		 */
 		try {
-			System.out.println("Call SugarJ using");
-			for (String s : args) {
-				System.out.print(s);
-				System.out.print(" ");
-			}
+			System.out.println("Call SugarJ ...");
+			//for (String s : args) {
+			//	System.out.print(s);
+			//	System.out.print(" ");
+			//}
 			System.out.println();
 			//if (this.useDifferentProcess) {
 				ProcessBuilder builder = new ProcessBuilder(args);
@@ -122,7 +122,7 @@ public class CompilerWrapper {
 					}
 				});
 				int exitCode = compilerProcess.waitFor();
-				System.out.println("SugarJ exited with code " + exitCode);
+				System.out.println("... exited with code " + exitCode);
 				return exitCode;
 				/*if (exitCode != 0) {
 					throw new RuntimeException(
